@@ -1,0 +1,9 @@
+1. Login 
+2. 
+
+
+
+
+#problem
+1. pada modal.js untuk modal add data dan edit data di outbox itu error.
+   ketika mencoba mengakses token lewat store.
