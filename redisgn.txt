@@ -7,3 +7,6 @@
 #problem
 1. pada modal.js untuk modal add data dan edit data di outbox itu error.
    ketika mencoba mengakses token lewat store.
+2. pada saat top up saldo itu ke halaman login terlebih dahulu, tidak langsung ke halaman bank, 
+   tapi jika link generate di buka di google baru terbuka bank nya
+3. 

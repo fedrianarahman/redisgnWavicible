@@ -4,6 +4,7 @@ import jwtDecode from 'jwt-decode';
 import { ApiService } from '../../ApiService/ApiService';
 import { useSelector, useDispatch } from 'react-redux'
 import ModalIframe from '../../components/header/ModalIframe';
+import CurrencyInput from 'react-currency-input-field';
 const TopUpSaldo = (props) => {
 
     const whatsAppInfo = useSelector((state) => state.whatsAppInfo)
@@ -72,7 +73,7 @@ const TopUpSaldo = (props) => {
     }
     const rupiah = (number)=>{
         return new Intl.NumberFormat("id-ID", {
-          style: "currency",
+        //   style: "currency",
           currency: "IDR"
         }).format(number);
       }
@@ -142,7 +143,7 @@ const TopUpSaldo = (props) => {
                                     <CRow>
                                         <CCol md={6}>
                                         <CFormLabel>Nominal Transfer</CFormLabel>
-                                        <CFormInput type='text' value={rupiah(data.totalamount)} disabled/>
+                                        <CFormInput type='text' style={{textAlign : "right"}} value={rupiah(data.totalamount)} disabled/>
                                         </CCol>
                                         <CCol md={6}>
                                         <CFormLabel>Tanggal Expired</CFormLabel>
