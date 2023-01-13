@@ -30,12 +30,10 @@ const Login = () => {
     textBtn: 'Request OTP',
     phoneNumber: '',
     otpNumber: '',
-    textFeedBack: '',
-    feedbackType: 'invalid',
-    isDisabled: false,
-    colorText: '',
-    validated : false,
-    valid : false
+    // isDisabled: false,
+    // colorText: '',
+    // validated : false,
+    // valid : false
   })
 
   const handleChange = (event) => {
@@ -45,52 +43,68 @@ const Login = () => {
     setParams({ ...params, [name]: value })
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const doLogin = async () =>{
     let phoneNumber = params.phoneNumber;
     let otp = params.otpNumber;
     let urlLogin = `/wa/login-by-otp`;
-    let urlRequest = `/wa/request-otp`;
-    if (params.otpNumber) {
-      let login = await ApiService.post(urlLogin, {phoneNumber, otp});
-      let token = login.data.data;
-      window.localStorage.setItem("token", token);
-      if (login.data.status=="error") {
-        Swal.fire({
-          title: 'Error!',
-          text: `${login.data.message}`,
-          icon: 'error',
-          confirmButtonText: 'Cool'
-        });
-        event.target.reset()
-        setParams({...params, style : 'none', otpNumber : null,textBtn: 'Request OTP' })
-      }else{
-        Swal.fire(
-          `${login.data.status}`,
-          'You clicked the button!',
-          'success'
-        )
-        const origin = location.state?.from?.pathname || '/dashboard';
-        dispatch({type:"set", token })
-        navigate(origin);
-      }
-    }else{
-      let requestOtp = await ApiService.post(urlRequest, {phoneNumber});
 
-      if (requestOtp.data.status == "error") {
-        setParams({...params, phoneNumber : '',validated : true})
-          
-          Swal.fire({
-            title: 'Error!',
-            text: requestOtp.data.message,
-            icon: 'error',
-            confirmButtonText: 'Cool'
-          });
-          event.target.reset()
-      } else {
-        setParams({...params, style : '', textBtn : 'Log in', validated : true , valid : true})
-      }
+    let requestLogin = await ApiService.post(urlLogin, {phoneNumber, otp});
+    let token = requestLogin.data.data;
+    window.localStorage.setItem("token", token);
+    
+    if(requestLogin.data.status=="error"){
+
+      Swal.fire({
+        title: 'Error!',
+        text: `${requestLogin.data.message}`,
+        icon: 'error',
+        confirmButtonText: 'Cool'
+      });
+
+      setParams((params)=>({...params, style : 'none', otpNumber : null,textBtn: 'Request OTP'}))
+
+    }else{
+
+      Swal.fire(
+        `${requestLogin.data.status}`,
+        'You clicked the button!',
+        'success'
+      )
+
+      const origin = location.state?.from?.pathname || '/dashboard';
+      dispatch({type:"set", token })
+      navigate(origin);
+
     }
+  }
+
+  const doRequestOtp = async() =>{
+  
+    let phoneNumber = params.phoneNumber;
+    let urlRequest = `/wa/request-otp`;
+
+    let requestOtp = await ApiService.post(urlRequest, {phoneNumber});
+
+    if (requestOtp.data.status == "error") {
+      setParams((params)=>({...params, phoneNumber : ''}));
+
+      Swal.fire({
+        title: 'Error!',
+        text: requestOtp.data.message,
+        icon: 'error',
+        confirmButtonText: 'Cool'
+      });
+
+    }else{
+      setParams((params)=>({...params, style : '', textBtn : 'Log in',}))
+    }
+  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+   
+    if(params.otpNumber) doLogin();
+    else doRequestOtp();
+    event.target.reset()
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">

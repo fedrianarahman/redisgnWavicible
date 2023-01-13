@@ -66,6 +66,7 @@ const ModalTopUp = (props) => {
                                     }
                                 }} value={params.nominal}/> */}
                                 <CurrencyInput
+                                    style={{textAlign : "right"}}
                                     prefix={prefix}
                                     id="input-example"
                                     name="nominal"

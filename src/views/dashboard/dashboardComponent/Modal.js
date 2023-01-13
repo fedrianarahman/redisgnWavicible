@@ -5,7 +5,7 @@ import { ApiService } from "../../../ApiService/ApiService";
 import { useSelector } from "react-redux";
 
 let token  = jwtDecode(window.localStorage.getItem("token"));
-
+// const token2 = jwtDecode(useSelector((state => state.token)));
 class ModalData extends Component{
     constructor(props){
         super(props);
