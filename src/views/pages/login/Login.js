@@ -30,10 +30,6 @@ const Login = () => {
     textBtn: 'Request OTP',
     phoneNumber: '',
     otpNumber: '',
-    // isDisabled: false,
-    // colorText: '',
-    // validated : false,
-    // valid : false
   })
 
   const handleChange = (event) => {
@@ -43,7 +39,7 @@ const Login = () => {
     setParams({ ...params, [name]: value })
   }
 
-  const doLogin = async () =>{
+  const doLogin = async (event) =>{
     let phoneNumber = params.phoneNumber;
     let otp = params.otpNumber;
     let urlLogin = `/wa/login-by-otp`;
@@ -60,7 +56,7 @@ const Login = () => {
         icon: 'error',
         confirmButtonText: 'Cool'
       });
-
+      event.target.reset()
       setParams((params)=>({...params, style : 'none', otpNumber : null,textBtn: 'Request OTP'}))
 
     }else{
@@ -78,16 +74,15 @@ const Login = () => {
     }
   }
 
-  const doRequestOtp = async() =>{
-  
+  const doRequestOtp = async(event) =>{
     let phoneNumber = params.phoneNumber;
     let urlRequest = `/wa/request-otp`;
-
+    
     let requestOtp = await ApiService.post(urlRequest, {phoneNumber});
-
+    
     if (requestOtp.data.status == "error") {
       setParams((params)=>({...params, phoneNumber : ''}));
-
+      
       Swal.fire({
         title: 'Error!',
         text: requestOtp.data.message,
@@ -95,16 +90,18 @@ const Login = () => {
         confirmButtonText: 'Cool'
       });
 
+      event.target.reset()
+
     }else{
       setParams((params)=>({...params, style : '', textBtn : 'Log in',}))
     }
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
    
-    if(params.otpNumber) doLogin();
-    else doRequestOtp();
-    event.target.reset()
+    if(params.otpNumber) doLogin(event);
+    else doRequestOtp(event);
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -148,22 +145,17 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" type='submit' className="px-4">
+                        <CButton color="primary" type='submit' disabled={false} className="px-4">
                           {params.textBtn}
                         </CButton>
                       </CCol>
-                      {/* <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
-                      </CCol> */}
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
-                  <div>
+                  <div style={{display : "none"}}>
                     <h2>Sign up</h2>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod

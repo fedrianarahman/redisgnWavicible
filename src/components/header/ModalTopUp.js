@@ -71,7 +71,7 @@ const ModalTopUp = (props) => {
                                     id="input-example"
                                     name="nominal"
                                     className='form-control'
-                                    placeholder="Nominal saldo"
+                                    placeholder=""
                                     defaultValue={params.nominal}
                                     decimalsLimit={2}
                                     onValueChange={(value) => setParams({...params, nominal : value})}

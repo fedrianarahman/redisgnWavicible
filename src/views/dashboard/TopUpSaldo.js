@@ -15,10 +15,10 @@ const TopUpSaldo = (props) => {
         visible : false,
       })
 
-    const cekToken = window.localStorage.getItem("token");
-    const tokenData = jwtDecode(cekToken);
-    const configLocal = {token : cekToken}
-    console.log("line 12", configLocal);
+    // const cekToken = window.localStorage.getItem("token");
+    // const tokenData = jwtDecode(cekToken);
+    // const configLocal = {token : cekToken}
+    // // console.log("line 12", configLocal);
 
     const url = `/wa/get-invoices`;
 
@@ -26,6 +26,7 @@ const TopUpSaldo = (props) => {
         const response = await ApiService.get(url);
         console.log("line 18", response.data.data);
         setData(...data, response.data.data)
+        // setData((data)=>([...data, response.data.data]))
     }
 
     const shorten = data.datetime_expired ? data.datetime_expired.substring(0,10) : '';

@@ -64,12 +64,12 @@ const AppHeader = () => {
   return (
     <>
       {
-        (params.show)?
+        params.show?
         <ModalTopUp show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} handleSubmit={handleSubmit}  noWhatsApp={whatsAppInfo.whatsappNumber} data={params.data}/>
         : ''
       }
       {
-        (modalIframe.visible)?
+        modalIframe.visible?
         <ModalIframe visible={modalIframe.visible} cbClose={handleCloseIframe} url={modalIframe.url}/>
         : ''
       }

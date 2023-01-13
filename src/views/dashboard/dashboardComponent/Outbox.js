@@ -24,7 +24,7 @@ const Outbox = () => {
         let name = event.target.name;
         let value = event.target.value;
 
-        setParams({ ...params, [name]: value });
+        setParams((params)=>({...params, [name] : value}))
     }
 
     const handleFormTanggal = () => {
@@ -59,22 +59,23 @@ const Outbox = () => {
 
         let res = await ApiService.post(`/wa/get-outbox`, { jenis, tanggal1, tanggal2 }, { params: localParams });
 
-        setParams({ ...params, datas: res.data.data.datas, show: false, satuData: res.data.data.datas[0] })
+        setParams((params)=>({...params, datas : res.data.data.datas, show: false, satuData: res.data.data.datas[0]}))
 
     }
 
     const handleClose = () => setParams({ ...params, show: false });
 
-
     const handleAddData = () => {
-        setParams({ ...params, show: true, modalTitle: 'Tambah Data', modalButton: 'Save', satuData: {} })
+        setParams((params)=>({...params, show : true, modalTitle : "Tambah Data", modalButton : "Save", satuData: {} }))
     }
+
     const handleEditData = (dataApi) => {
-        setParams({ ...params, show: true, modalTitle: 'Edit Data', modalButton: 'Update', satuData: dataApi })
+        setParams((params)=>({...params, show : true, modalTitle : "Edit Data", modalButton : "Update", satuData : dataApi}));
     }
+
     return (
         <>
-            {(params.show)?
+            {params.show?
                 <ModalData show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} onLoadData={onLoadData} dataApi={params.satuData} /> : ''
             }
             <CCard style={{ border: "1px solid #FD841F" }}>

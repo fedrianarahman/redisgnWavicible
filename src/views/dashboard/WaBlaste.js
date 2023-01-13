@@ -77,7 +77,7 @@ const WaBlaste = () => {
     let url = "/tahunajaran"
     let params = Localparams;
     let configLocal = {token : tokenSS}
-    console.log("line 91", configLocal);
+    // console.log("line 91", configLocal);
     const getDataTahunAjaran = await ApiService.get(url, params, configLocal);
 
     setTahunAjaran(getDataTahunAjaran.data.data)
@@ -100,7 +100,8 @@ const WaBlaste = () => {
     let nama = event.target.name;
     let value = event.target.value;
 
-    setParams({ ...params, [nama]: value });
+    // setParams({ ...params, [nama]: value });
+    setParams((params)=>({...params, [nama] : value}))
   }
 
 
