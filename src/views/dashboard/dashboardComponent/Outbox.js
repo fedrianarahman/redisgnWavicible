@@ -43,6 +43,7 @@ const Outbox = () => {
             )
         }
     }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         await onLoadData()
@@ -78,6 +79,7 @@ const Outbox = () => {
             {params.show?
                 <ModalData show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} onLoadData={onLoadData} dataApi={params.satuData} /> : ''
             }
+            
             <CCard style={{ border: "1px solid #FD841F" }}>
                 <CCardHeader style={{ background: "#FD841F", color: "#fff", fontWeight: "bold" }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>

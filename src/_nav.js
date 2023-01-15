@@ -28,16 +28,6 @@ const _nav = [
       // text: 'NEW',
     },
   },
-  // {
-  //   component: CNavItem,
-  //   name: 'Set up',
-  //   to: '/setup',
-  //   icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
-  //   badge: {
-  //     color: 'info',
-  //     // text: 'NEW',
-  //   },
-  // },
 ]
 
 export default _nav

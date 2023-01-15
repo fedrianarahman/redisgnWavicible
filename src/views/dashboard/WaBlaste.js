@@ -54,6 +54,7 @@ const WaBlaste = () => {
       row.isChecked = !isCheckAll
     }
   };
+  
   const ambilDataCheked = () => {
     let datatable = [...dataTabel].filter(o => o.isChecked)
     console.log("dat checked", datatable)
@@ -202,7 +203,7 @@ TOTAL TAGIHAH 40.000
                   <option value="">Pilih...</option>
                   {tahunAjaran.map((dataTahunAjaran) => <option key={dataTahunAjaran.id} value={dataTahunAjaran.tahun_ajaran}>{dataTahunAjaran.tahun_ajaran}</option>)}
                 </CFormSelect>
-                <CFormFeedback invalid>Please provide a valid city.</CFormFeedback>
+                
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="validationCustom04">Kelas</CFormLabel>
@@ -210,7 +211,7 @@ TOTAL TAGIHAH 40.000
                   <option value="">Semua</option>
                   {dataKelas.map((satuDataKelas) => <option key={satuDataKelas.id} value={satuDataKelas.id}>{satuDataKelas.nama_kelas}</option>)}
                 </CFormSelect>
-                <CFormFeedback invalid>Please provide a valid city.</CFormFeedback>
+                
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="validationCustom05">Nama</CFormLabel>

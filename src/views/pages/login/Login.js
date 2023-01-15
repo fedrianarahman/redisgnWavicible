@@ -36,7 +36,7 @@ const Login = () => {
     let name = event.target.name;
     let value = event.target.value;
 
-    setParams({ ...params, [name]: value })
+    setParams((params)=>({...params, [name] : value}))
   }
 
   const doLogin = async (event) =>{
@@ -103,6 +103,7 @@ const Login = () => {
     if(params.otpNumber) doLogin(event);
     else doRequestOtp(event);
   }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -122,7 +123,7 @@ const Login = () => {
                         if (!/[0-9]/.test(event.key)) {
                           event.preventDefault();
                         }
-                      }} required={true} valid={params.valid}  />
+                      }} required={true} />
                     </CInputGroup>
                     <CInputGroup className="mb-4 " style={{ display: params.style }} >
                       <CInputGroupText>
