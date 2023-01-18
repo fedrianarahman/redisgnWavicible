@@ -3,9 +3,8 @@ import CIcon from '@coreui/icons-react'
 import {
   cilLayers,
   cilAudio,
-  cilSettings
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import {  CNavItem,  } from '@coreui/react'
 
 const _nav = [
   {
@@ -20,7 +19,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Wa Blaste',
+    name: 'Wa Blaster',
     to: '/wablaste',
     icon: <CIcon icon={cilAudio} customClassName="nav-icon" />,
     badge: {

@@ -49,10 +49,11 @@ const AppHeaderDropdown = () => {
 
   return (
     <>
-    <div>{(params.show) ? <div><ModalProfile show={params.show} onHide={handleClose} modalTitle={params.modalTitle}  nama={whatsAppInfo.nama} nomorWa={whatsAppInfo.whatsappNumber} saldo={`${whatsAppInfo.saldoTopup}`}/></div> : ''}</div>
+    
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+        {/* <CAvatar src={avatar8} size="md" /> */}
+        <CIcon icon={cilUser} className="me-2" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>

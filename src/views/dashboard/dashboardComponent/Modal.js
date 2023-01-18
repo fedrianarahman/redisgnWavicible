@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Form, Row, Button } from 'react-bootstrap';
 import jwtDecode from "jwt-decode";
 import { ApiService } from '../../../ApiService/ApiService';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector} from 'react-redux'
 const ModalData = (props) => {
 
     // let token = jwtDecode(window.localStorage.getItem("token"));

@@ -10,7 +10,7 @@ import {logoNegative} from "../assets/brand/logo-negative"
 import {sygnet} from "../assets/brand/sygnet"
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
-
+import { IoCallSharp } from "react-icons/io5";
 // sidebar nav config
 import navigation from '../_nav'
 
@@ -30,8 +30,8 @@ const AppSidebar = () => {
       style={{background : "#FD841F"}}
     >
       <CSidebarBrand className="d-none d-md-flex" style={{background : "#FD841F"}} to="/">
-        <CIcon className="sidebar-brand-full"  icon={logoNegative} height={35} />
-        <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} />
+        <IoCallSharp style={{ marginRight : "180px", background: "green", padding: "3px", color: "white", borderRadius: "50%"}} size={30} />
+        <span style={{fontWeight :"bold", marginLeft : '-40px', marginTop : "10px", fontSize :"20px", position:"absolute"}}>Wa Vicible</span>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
