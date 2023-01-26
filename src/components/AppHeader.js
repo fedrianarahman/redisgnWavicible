@@ -24,12 +24,15 @@ import ModalTopUp from './header/ModalTopUp';
 import ModalIframe from './header/ModalIframe';
 import ModalScan from './header/ModalScan';
 import { ApiService } from '../ApiService/ApiService';
-import ButtonStatus from './header/ButtonStatus'
+import ButtonStatus from './header/ButtonStatus';
+import { BsFillTelephonePlusFill } from "react-icons/bs"
+import { useNavigate } from 'react-router-dom'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const whatsAppInfo = useSelector((state) => state.whatsAppInfo)
   const token = jwtDecode(useSelector((state => state.token)));
+  const navigate = useNavigate();
 
   const [params, setParams] = useState({
     show: false,
@@ -42,9 +45,9 @@ const AppHeader = () => {
   });
 
   const [modalScan, setModalScan] = useState({
-    show : false,
-    dataQrCode : ""
-  }) 
+    show: false,
+    dataQrCode: ""
+  })
 
   const [elemenQrCode, setElementQrCode] = useState("");
 
@@ -52,8 +55,20 @@ const AppHeader = () => {
     visible: false,
   })
 
-  const handleClick = () => {
-    setParams({ ...params, show: true })
+  const handleClick = async () => {
+    await cekInvoice();
+    
+  }
+
+  const cekInvoice = async ()=>{
+    const url = `/wa/get-invoices`;
+    let res =  await ApiService.get(url);
+    // console.log("line 64" , res.data);
+    if (res.data !== null) {
+      navigate("topUpSaldo") || navigate("/topUpSaldo");
+    }else{
+      setParams({ ...params, show: true })
+    }
   }
 
   const handleClose = () => {
@@ -71,46 +86,47 @@ const AppHeader = () => {
     setModalIframe({ ...modalIframe, visible: false });
   }
 
-  const rupiah = (number)=>{
+  const rupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
-      style: "currency",
+      // style: "currency",
       currency: "IDR"
     }).format(number);
   }
 
-  const handleScan = ()=>{
-    setModalScan((modalScan)=>({...modalScan, show : true}));
+  const handleScan = () => {
+    setModalScan((modalScan) => ({ ...modalScan, show: true }));
     // console.log("line 79", modalScan.dataQrCode);
   }
 
-  const handleScanClose = ()=>{
-    setModalScan((modalScan)=>({...modalScan, show : !true}));
+  const handleScanClose = () => {
+    setModalScan((modalScan) => ({ ...modalScan, show: !true }));
   }
-  
-  useEffect(()=>{
-    (async()=>{
-      let fetch =   await ApiService.post(`/wa/get-state-server`, {id : token.id})
-      setElementQrCode((satate)=> fetch.data.data)
-    //     console.log("line fetch", fetch)
+  // console.log("line 89", modalScan.dataQrCode);
+  useEffect(() => {
+    (async () => {
+      let fetch = await ApiService.post(`/wa/get-state-server`, { id: token.id })
+      // setElementQrCode((satate)=> fetch.data.data)
+      //   console.log("line fetch", fetch.data)
+      setModalScan({ ...modalScan, dataQrCode: fetch.data.data })
     })()
   }, [])
 
   return (
     <>
       {
-        params.show?
-        <ModalTopUp show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} handleSubmit={handleSubmit}  noWhatsApp={whatsAppInfo.whatsappNumber} data={params.data}/>
-        : ''
+        params.show ?
+          <ModalTopUp show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} handleSubmit={handleSubmit} noWhatsApp={whatsAppInfo.whatsappNumber} data={params.data} />
+          : ''
       }
       {
-        modalIframe.visible?
-        <ModalIframe visible={modalIframe.visible} cbClose={handleCloseIframe} url={modalIframe.url}/>
-        : ''
+        modalIframe.visible ?
+          <ModalIframe visible={modalIframe.visible} cbClose={handleCloseIframe} url={modalIframe.url} />
+          : ''
       }
       {
-        modalScan.show?
-        <ModalScan show={modalScan.show} onHide={handleScanClose} qrCode={elemenQrCode}/>
-        : ''
+        modalScan.show ?
+          <ModalScan show={modalScan.show} onHide={handleScanClose} qrCode={elemenQrCode} />
+          : ''
       }
       <CHeader position="sticky" className="mb-4">
         <CContainer fluid>
@@ -138,38 +154,37 @@ const AppHeader = () => {
               <CNavLink href="#" >
                 {/* <CIcon icon={cilDollar} size="lg" style={{color : "green"}}/> */}
                 Saldo :
-                <span style={{ fontSize: "16px" }}>{rupiah(whatsAppInfo.saldoTopup)}</span>
-                <CIcon icon={cilLoopCircular} style={{ marginLeft: "7px", color: "black" }} />
+                <span style={{ fontSize: "16px", marginLeft : "5px" }}>Rp. {rupiah(whatsAppInfo.saldoTopup)}</span>
+                <CTooltip CTooltip content="on Login" placement='right'>
+                  <CIcon icon={cilLoopCircular} style={{ marginLeft: "7px", color: "black" }} />
+                  {/* <IoCallSharp  /> */}
+                </CTooltip>
               </CNavLink>
             </CNavItem>
             <CNavItem >
               <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none" }} onClick={handleClick}>Top Up saldo <CIcon icon={cilMoney} style={{ marginLeft: "7px", color: "white" }} /></CButton>
             </CNavItem>
-            <CNavItem className='ml-4'>
-              
-              <CNavLink href="#">
+            <CNavItem >
+              <CNavLink href="#" >
+
                 Status :
-                {/* {
-                  modalScan.dataQrCode ==="on Login" ?
-                  <CTooltip content="on Login" placement='right'>
-                  <IoCallSharp style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%" }} size={20} />
-                  </CTooltip> : 
-                  <CTooltip content="Scan qr" placement='right'>
-                  <CButton size='sm' variant='primary' style={{ marginTop: "5px", background: "#379237", border: "none" }} onClick={handleScan}>cek scan</CButton>
+                {
+                  modalScan.dataQrCode == "onLogin" &&
+                  <CTooltip CTooltip content="on Login" placement='right'>
+                    <CIcon icon={cilPhone}  style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
                   </CTooltip>
-                } */}
-                  {modalScan.dataQrCode== "on Login" && <CTooltip content="on Login" placement='right'>
-                  <IoCallSharp style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%" }} size={20} />
-                  </CTooltip>}
-                  {modalScan.dataQrCode =="error" && 
-                  <CTooltip content="on Login" placement='right'>
-                  <IoCallSharp style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%" }} size={20} />
-                  </CTooltip>}
-                  {modalScan.dataQrCode != null &&
-                  <CTooltip content="Scan qr" placement='right'>
-                  <CButton size='sm' style={{marginLeft : "3px", color:"white", background: "#F6F54D", border: "none",marginTop : "-3px" }} onClick={handleScan}> scan qr</CButton>
+                }
+                {
+                  modalScan.dataQrCode == "error" &&
+                  <CTooltip CTooltip content="on Login" placement='right'>
+                    <CIcon icon={cilPhone}  style={{ marginLeft: "12px", background: "red", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
                   </CTooltip>
-                  }
+                }
+                {modalScan.dataQrCode != "onLogin" &&
+                  <CTooltip content="Scan qr" placement='right'>
+                    <CButton size='sm' style={{ marginLeft: "3px", color: "white", background: "#F6F54D", border: "none", marginTop: "-3px" }} onClick={handleScan}> scan qr</CButton>
+                  </CTooltip>
+                }
               </CNavLink>
             </CNavItem>
           </CHeaderNav>

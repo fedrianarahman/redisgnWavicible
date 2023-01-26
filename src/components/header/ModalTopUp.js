@@ -27,8 +27,12 @@ const ModalTopUp = (props) => {
     const handleSubmit2 = (event) => {
         event.preventDefault()
         // console.log("line 80", param);
-        if (!params.nominal || params.nominal <= 25000) {
+        if (!params.nominal ) {
             alert("silahkan masukan nilai")
+            return false
+        }
+        if(params.nominal <= 25000){
+            alert("miinimal top up Rp.25.0000");
             return false
         }
 

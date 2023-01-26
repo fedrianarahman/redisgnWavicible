@@ -24,7 +24,7 @@ const TopUpSaldo = (props) => {
 
     const fetchData = async ()=>{
         const response = await ApiService.get(url);
-        console.log("line 18", response.data.data);
+        // console.log("line 18", response.data.data);
         setData(...data, response.data.data)
         // setData((data)=>([...data, response.data.data]))
     }
@@ -57,6 +57,7 @@ const TopUpSaldo = (props) => {
         console.log("line 45", url);
     }
 
+    console.log("line 60", data);
     const batalkanTransfer = () =>{
         const param = [
             "key=abahKadabra",
