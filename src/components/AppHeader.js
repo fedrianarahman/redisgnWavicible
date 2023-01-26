@@ -167,7 +167,7 @@ const AppHeader = () => {
                   </CTooltip>}
                   {modalScan.dataQrCode != null &&
                   <CTooltip content="Scan qr" placement='right'>
-                  <CButton size='sm' style={{marginLeft : "3px", color:"white", background: "#379237", border: "none" }} onClick={handleScan}>cek scan</CButton>
+                  <CButton size='sm' style={{marginLeft : "3px", color:"white", background: "#F6F54D", border: "none",marginTop : "-3px" }} onClick={handleScan}> scan qr</CButton>
                   </CTooltip>
                   }
               </CNavLink>

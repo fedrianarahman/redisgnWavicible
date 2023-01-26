@@ -60,14 +60,8 @@ const ModalTopUp = (props) => {
 
                             <Form.Group className='col col-md-12'>
                                 <Form.Label>Nominal</Form.Label>
-                                {/* <Form.Control name="nominal" placeholder="Nominal saldo" required={true} onChange={handleChange} autoComplete="off" onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} value={params.nominal}/> */}
                                 <CurrencyInput
                                     style={{textAlign : "right"}}
-                                    prefix={prefix}
                                     id="input-example"
                                     name="nominal"
                                     className='form-control'

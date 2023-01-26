@@ -48,24 +48,40 @@ const WaBlaste = () => {
   }, []);
 
 
-  const handleSelectAll = (data) => {
+  // const handleSelectAll = (data) => {
+  //   setIsCheckAll(!isCheckAll)
+  //   for (let row of data) {
+  //     row.isChecked = !isCheckAll
+  //   }
+  // };
+  
+  const handleSelectAll = (e, data) => {
     setIsCheckAll(!isCheckAll)
     for (let row of data) {
       row.isChecked = !isCheckAll
     }
   };
-  
+
   const ambilDataCheked = () => {
     let datatable = [...dataTabel].filter(o => o.isChecked)
     console.log("dat checked", datatable)
   }
 
-  const handleClick = (data) => {
+  // const handleClick = (data) => {
+  //   data.isChecked = !data.isChecked
+  //   let newData = [...dataTabel]
+  //   setSatudata(data);
+  //   setDataTabel(newData);
+  //   console.log("line 81", satuData);
+  // };
+  const handleClick = (e,data) => {
     data.isChecked = !data.isChecked
     let newData = [...dataTabel]
     setSatudata(data);
     setDataTabel(newData);
+    // console.log("line 81", satuData);
   };
+
   const fetchDataTahunAjaran = async () => {
     const tokenSS = window.sessionStorage.getItem("tokenSS");
     const tokenData = jwtDecode(tokenSS)
@@ -123,7 +139,9 @@ const WaBlaste = () => {
     setDataTabel(getDataSiswa.data.data);
     dataTabel.isChecked = false
   }
+
   const fnReplace = (tpl,data) => {return (tpl+'').replace(/\$\(([^\)]+)?\)/g, function ($1, $2) { return data[$2]; });}
+
   const handleChangePesan = (event) => {
     let nama = event.target.name;
     let value = event.target.value;
@@ -155,6 +173,7 @@ const WaBlaste = () => {
 TOTAL TAGIHAH 40.000
             `
   }]
+  
   const listFormat = dataArray.map((data) => "$("+data.label+")").join('\n')
 
   const handleKirimPesan = async () => {

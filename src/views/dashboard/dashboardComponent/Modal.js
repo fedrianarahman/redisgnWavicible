@@ -59,7 +59,7 @@ const ModalData = (props) => {
                         <>
                             <Form.Group className='col col-md-12'>
                                 <Form.Label>Nomor Tujuan</Form.Label>
-                                <Form.Control type='text' name='nomorTujuan' required onChange={handleChange} defaultValue={params.form.nomorTujuan} placeholder="form modal check" />
+                                <Form.Control type='text' name='nomorTujuan' required onChange={handleChange} defaultValue={params.form.nomorTujuan} placeholder="nomor tujuan" />
                             </Form.Group>
 
                             <Form.Group className='col col-md-12'>

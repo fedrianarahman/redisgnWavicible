@@ -53,7 +53,7 @@ const ModalIframe = ({ visible, cbClose, url }) => {
 
   return (
    
-    <CModal visible={visible} size='lg' onClose={cbClose} fullscreen={true}>
+    <CModal visible={visible} size='lg' onClose={cbClose} >
       {/* <CModalHeader>
       <CModalTitle>iframe</CModalTitle>
       </CModalHeader> */}
