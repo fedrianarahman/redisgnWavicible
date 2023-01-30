@@ -3,6 +3,9 @@ import { CButton, CCard, CCardBody, CCardHeader, CForm, CFormInput, CFormLabel, 
 
 import { ApiService } from '../../../ApiService/ApiService';
 import ModalData from './Modal';
+import SpinnerLoading from '../../../components/SpinnerLoad/SpinnerLoading';
+import { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 const Outbox = () => {
 
 
@@ -20,6 +23,8 @@ const Outbox = () => {
         modalButton: '',
     });
 
+    const [loading, setLoading] = useState(false)
+
     const handleChange = (event) => {
         let name = event.target.name;
         let value = event.target.value;
@@ -33,11 +38,11 @@ const Outbox = () => {
                 <>
                     <CCol md={3}>
                         <CFormLabel>Tanggal 1</CFormLabel>
-                        <CFormInput type='date' name='tanggal1' defaultValue={defaultDate.toLocaleDateString('en-CA')} />
+                        <CFormInput type='date' name='tanggal1' defaultValue={defaultDate.toLocaleDateString('en-CA')} onChange={handleChange}/>
                     </CCol>
                     <CCol md={3}>
                         <CFormLabel>Tanggal 2</CFormLabel>
-                        <CFormInput type='date' name='tanggal2' defaultValue={defaultDate.toLocaleDateString('en-CA')} />
+                        <CFormInput type='date' name='tanggal2' defaultValue={defaultDate.toLocaleDateString('en-CA')}  onChange={handleChange}/>
                     </CCol>
                 </>
             )
@@ -46,9 +51,14 @@ const Outbox = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        await onLoadData()
+        setParams(state => ({ ...state, datas : []}))
+        setLoading(state => true);
+        // setTimeout( async()=>{
+        //     await onLoadData()
+        // }, 2000)
+        await onLoadData();
     }
-
+    
     const onLoadData = async () => {
         const { jenis, tanggal1, tanggal2 } = params;
 
@@ -59,7 +69,7 @@ const Outbox = () => {
         }
 
         let res = await ApiService.post(`/wa/get-outbox`, { jenis, tanggal1, tanggal2 }, { params: localParams });
-
+        setLoading(state => false);
         setParams((params)=>({...params, datas : res.data.data.datas, show: false, satuData: res.data.data.datas[0]}))
 
     }
@@ -79,16 +89,16 @@ const Outbox = () => {
             {params.show?
                 <ModalData show={params.show} onHide={handleClose} modalTitle={params.modalTitle} textBtn={params.modalButton} onLoadData={onLoadData} dataApi={params.satuData} /> : ''
             }
-            
             <CCard style={{ border: "1px solid #FD841F" }}>
                 <CCardHeader style={{ background: "#FD841F", color: "#fff", fontWeight: "bold" }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <h5>Outbox</h5>
-                        <CButton size='sm' type='submit' onClick={handleAddData}>Add Data</CButton>
+                        <CButton size='sm' type='submit' onClick={handleAddData}>Tambah Data</CButton>
                     </div>
                 </CCardHeader>
                 <CCardBody>
-                    <CForm onSubmit={handleSubmit}>
+                       
+                     <CForm onSubmit={handleSubmit}>
                         <CRow>
                             <CCol md={3}>
                                 <CFormLabel>Jenis</CFormLabel>
@@ -103,7 +113,10 @@ const Outbox = () => {
                             </CCol>
                         </CRow>
                     </CForm>
-                    <CTable small className='mt-4 table-responsive table-bordered'>
+                     {loading ? (
+                        <SpinnerLoading/>
+                     ):(
+                        <CTable small className='mt-4 table-responsive table-bordered'>
                         <CTableHead>
                             <CTableRow>
                                 <CTableHeaderCell scope="col">Nomor</CTableHeaderCell>
@@ -133,6 +146,9 @@ const Outbox = () => {
                             })}
                         </CTableBody>
                     </CTable>
+                     )
+
+                     }
                 </CCardBody>
             </CCard>
         </>

@@ -9,7 +9,7 @@ const TopUpSaldo = (props) => {
 
     const whatsAppInfo = useSelector((state) => state.whatsAppInfo)
     const token = jwtDecode(useSelector((state => state.token)));
-    const [data, setData] = useState([])
+    const [data, setData] = useState({})
     
     const [modalIframe, setModalIframe] = useState({
         visible : false,
@@ -25,8 +25,8 @@ const TopUpSaldo = (props) => {
     const fetchData = async ()=>{
         const response = await ApiService.get(url);
         // console.log("line 18", response.data.data);
-        setData(...data, response.data.data)
-        // setData((data)=>([...data, response.data.data]))
+        // setData((data)=>(...data, response.data.data))
+        setData((data)=>({...data, ...response.data.data[0]}))
     }
 
     const shorten = data.datetime_expired ? data.datetime_expired.substring(0,10) : '';
@@ -34,7 +34,7 @@ const TopUpSaldo = (props) => {
     useEffect(()=>{
 
         fetchData()
-    }, [data])
+    }, [])
 
     const handleCloseIframe =  () =>{
         setModalIframe({...modalIframe, visible : false});

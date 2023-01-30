@@ -12,10 +12,11 @@ import {
   CNavItem,
   CBadge,
   CButton,
-  CTooltip
+  CTooltip,
+  CPopover
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu, cilDollar, cilLoopCircular, cilPhone, cilMoney } from '@coreui/icons'
+import { cilBell, cilEnvelopeOpen, cilList, cilMenu, cilDollar, cilLoopCircular, cilPhone, cilMoney,  } from '@coreui/icons'
 import { AppHeaderDropdown } from './header/index'
 import { IoCallSharp } from "react-icons/io5";
 import { logo } from '../assets/brand/logo';
@@ -26,7 +27,8 @@ import ModalScan from './header/ModalScan';
 import { ApiService } from '../ApiService/ApiService';
 import ButtonStatus from './header/ButtonStatus';
 import { BsFillTelephonePlusFill } from "react-icons/bs"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import CekForm from './header/CekForm'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -41,7 +43,11 @@ const AppHeader = () => {
     nominal: "300000",
     nomorWa: whatsAppInfo.whatsappNumber,
     uid_Sekolah: 25,
-    data: {}
+    data: {},
+    // visible :false,
+    display : {
+      display : ""
+    }
   });
 
   const [modalScan, setModalScan] = useState({
@@ -55,19 +61,26 @@ const AppHeader = () => {
     visible: false,
   })
 
-  const handleClick = async () => {
+  const handleClick =  async() => {
     await cekInvoice();
-    
+    if (cekInvoice()) {
+      alert("Mohon untuk menyelesaikan pembayaran sebelumnya");
+    }else{
+
+      setParams((params)=>({...params, visible : false}));
+    }
+   
   }
 
-  const cekInvoice = async ()=>{
+  const cekInvoice = async () => {
     const url = `/wa/get-invoices`;
-    let res =  await ApiService.get(url);
-    // console.log("line 64" , res.data);
-    if (res.data !== null) {
+    let res = await ApiService.get(url);
+    console.log("line 64", res.data.data);
+
+    if (res.data.data.length > 0) {
       navigate("topUpSaldo") || navigate("/topUpSaldo");
-    }else{
-      setParams({ ...params, show: true })
+    } else {
+      setParams((params) => ({ ...params, show: true }))
     }
   }
 
@@ -79,6 +92,7 @@ const AppHeader = () => {
     // event.preventDefault();
     setModalIframe({ ...modalIframe, visible: true, url: url });
     handleClose()
+    setParams((params)=>({...params, visible : false, display : {display : "none"}}));
     // console.log("line 63", param);
   }
 
@@ -111,6 +125,9 @@ const AppHeader = () => {
     })()
   }, [])
 
+  const handlePopover = ()=>{
+    setParams((params)=>({...params, visible : false}));
+  }
   return (
     <>
       {
@@ -154,12 +171,19 @@ const AppHeader = () => {
               <CNavLink href="#" >
                 {/* <CIcon icon={cilDollar} size="lg" style={{color : "green"}}/> */}
                 Saldo :
-                <span style={{ fontSize: "16px", marginLeft : "5px" }}>Rp. {rupiah(whatsAppInfo.saldoTopup)}</span>
-                <CTooltip CTooltip content="on Login" placement='right'>
-                  <CIcon icon={cilLoopCircular} style={{ marginLeft: "7px", color: "black" }} />
-                  {/* <IoCallSharp  /> */}
-                </CTooltip>
+                <span style={{ fontSize: "16px", marginLeft: "5px" }}>Rp. {rupiah(whatsAppInfo.saldoTopup)}</span>
+                <CIcon icon={cilLoopCircular} style={{ marginLeft: "7px", color: "black" }} />
               </CNavLink>
+            </CNavItem>
+            <CNavItem >
+              <CPopover
+                content={<CekForm handleSubmit={handleSubmit} />}
+                placement="bottom"
+                visible={params.visible}
+                onClick={handleClick}
+              >
+                <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none", marginRight :"10px" }} onClick={handleClick}>Popover on bottom</CButton>
+              </CPopover>
             </CNavItem>
             <CNavItem >
               <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none" }} onClick={handleClick}>Top Up saldo <CIcon icon={cilMoney} style={{ marginLeft: "7px", color: "white" }} /></CButton>
@@ -171,13 +195,13 @@ const AppHeader = () => {
                 {
                   modalScan.dataQrCode == "onLogin" &&
                   <CTooltip CTooltip content="on Login" placement='right'>
-                    <CIcon icon={cilPhone}  style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
+                    <CIcon icon={cilPhone} style={{ marginLeft: "12px", background: "green", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
                   </CTooltip>
                 }
                 {
                   modalScan.dataQrCode == "error" &&
                   <CTooltip CTooltip content="on Login" placement='right'>
-                    <CIcon icon={cilPhone}  style={{ marginLeft: "12px", background: "red", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
+                    <CIcon icon={cilPhone} style={{ marginLeft: "12px", background: "red", padding: "3px", color: "white", borderRadius: "50%", marginTop: "2px" }} size={"lg"} />
                   </CTooltip>
                 }
                 {modalScan.dataQrCode != "onLogin" &&
