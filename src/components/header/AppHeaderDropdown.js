@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom'
 const AppHeaderDropdown = () => {
 
   const navigate = useNavigate();
-  const {onLogout} = React.useContext(AuthContext);
+  const {onLogout, profile} = React.useContext(AuthContext);
   const whatsAppInfo = useSelector((state)=> state.whatsAppInfo)
   const [params, setParams] = useState({
     show : false,
@@ -47,6 +47,9 @@ const AppHeaderDropdown = () => {
 
   }
 
+  const handleProfile = ()=>{
+    navigate('/profile')
+  }
   return (
     <>
     
@@ -57,7 +60,7 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
-        <CDropdownItem href="#" onClick={()=>handleModal()}>
+        <CDropdownItem href="#" onClick={profile}>
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>

@@ -74,12 +74,12 @@ const WaBlaste = () => {
   //   setDataTabel(newData);
   //   console.log("line 81", satuData);
   // };
-  const handleClick = (e,data) => {
+  const handleClickCheckbox = (e,data) => {
     data.isChecked = !data.isChecked
     let newData = [...dataTabel]
-    setSatudata(data);
+    // setSatudata(data);
     setDataTabel(newData);
-    // console.log("line 81", satuData);
+    console.log("line 81", data);
   };
 
   const fetchDataTahunAjaran = async () => {
@@ -278,7 +278,7 @@ TOTAL TAGIHAH 40.000
                         <Checkbox key={data.id} type="checkbox"
                           name={data.fullname}
                           id={data.id}
-                          handleClick={handleClick}
+                          handleClick={handleClickCheckbox}
                           data={data}
                           isChecked={data.isChecked} />
                       </CTableDataCell>

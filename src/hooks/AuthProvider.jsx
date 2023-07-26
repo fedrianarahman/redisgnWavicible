@@ -15,11 +15,18 @@ const AuthProvider = ({children}) => {
         navigate("/login");
     }
 
+    const handleProfile =(e) =>{
+      e.preventDefault();
+      navigate("/profile")
+    }
+
     const value ={
         token,
+        profile : handleProfile,
         onLogout : handleLogout,
         getToken : ()=> window.localStorage.getItem("token")
     }
+   
   return (
     <AuthContext.Provider value={value}>
         {children}

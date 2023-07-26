@@ -15,10 +15,6 @@ const TopUpSaldo = (props) => {
         visible : false,
       })
 
-    // const cekToken = window.localStorage.getItem("token");
-    // const tokenData = jwtDecode(cekToken);
-    // const configLocal = {token : cekToken}
-    // // console.log("line 12", configLocal);
 
     const url = `/wa/get-invoices`;
 

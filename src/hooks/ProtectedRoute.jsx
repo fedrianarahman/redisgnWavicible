@@ -32,7 +32,7 @@ const ProtectedRoute = ({children}) => {
         // console.log("line 32 protected route", responseLoginSs.data.data);
         let tokenSS = window.sessionStorage.setItem("tokenSS", responseLoginSs.data.data);
 
-        // const response1 = await ApiService.post(`/wa/get-state-server`, {id : tokenData.id});
+        // const response1 = P
         // console.log('line 30 PR', response.data)
         dispatch({type : 'set', whatsAppInfo: response.data.data, tokenSS : tokenSS});
         // dispatch({type : "set", statusLogin : response1.status});

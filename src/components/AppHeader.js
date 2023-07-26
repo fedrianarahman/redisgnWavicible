@@ -47,7 +47,11 @@ const AppHeader = () => {
     // visible :false,
     display : {
       display : ""
-    }
+    },
+    disabled : false,
+    showPopoper : false,
+    showModalIframe : false,
+    showModalTopUp  :false
   });
 
   const [modalScan, setModalScan] = useState({
@@ -55,32 +59,30 @@ const AppHeader = () => {
     dataQrCode: ""
   })
 
-  const [elemenQrCode, setElementQrCode] = useState("");
-
   const [modalIframe, setModalIframe] = useState({
     visible: false,
   })
 
   const handleClick =  async() => {
     await cekInvoice();
-    if (cekInvoice()) {
-      alert("Mohon untuk menyelesaikan pembayaran sebelumnya");
-    }else{
-
-      setParams((params)=>({...params, visible : false}));
-    }
+    setParams((params)=>({...params, visible : false, disabled : true}));
+    setModalIframe((state)=>({...state, visible : false}));
    
   }
 
   const cekInvoice = async () => {
     const url = `/wa/get-invoices`;
     let res = await ApiService.get(url);
-    console.log("line 64", res.data.data);
+    console.log("line 64", res.data);
 
-    if (res.data.data.length > 0) {
+    if (res.data.data.length != 0) {
+      setParams((params)=>({...params, visible : false, show : false}));
+      alert("Mohon untuk menyelesaikan pembayaran sebelumnya");
       navigate("topUpSaldo") || navigate("/topUpSaldo");
     } else {
+      
       setParams((params) => ({ ...params, show: true }))
+      setParams((params)=>({...params, visible : false}));
     }
   }
 
@@ -90,9 +92,10 @@ const AppHeader = () => {
 
   const handleSubmit = (url) => {
     // event.preventDefault();
+
     setModalIframe({ ...modalIframe, visible: true, url: url });
     handleClose()
-    setParams((params)=>({...params, visible : false, display : {display : "none"}}));
+    setParams((params)=>({...params, visible : false, showPopoper:false, display : {display : "none"}}));
     // console.log("line 63", param);
   }
 
@@ -120,14 +123,15 @@ const AppHeader = () => {
     (async () => {
       let fetch = await ApiService.post(`/wa/get-state-server`, { id: token.id })
       // setElementQrCode((satate)=> fetch.data.data)
-      //   console.log("line fetch", fetch.data)
-      setModalScan({ ...modalScan, dataQrCode: fetch.data.data })
+        // console.log("line fetch", fetch.data)
+      setModalScan({ ...modalScan, dataQrCode: fetch.data.data });
     })()
+    
   }, [])
-
-  const handlePopover = ()=>{
-    setParams((params)=>({...params, visible : false}));
-  }
+  console.log("line 131", params.showPopoper);
+ const hadleClosePopover =()=>{
+      setParams({...params, showPopoper : false});
+ }
   return (
     <>
       {
@@ -142,7 +146,7 @@ const AppHeader = () => {
       }
       {
         modalScan.show ?
-          <ModalScan show={modalScan.show} onHide={handleScanClose} qrCode={elemenQrCode} />
+          <ModalScan show={modalScan.show} onHide={handleScanClose} qrCode={modalScan.dataQrCode} />
           : ''
       }
       <CHeader position="sticky" className="mb-4">
@@ -175,16 +179,32 @@ const AppHeader = () => {
                 <CIcon icon={cilLoopCircular} style={{ marginLeft: "7px", color: "black" }} />
               </CNavLink>
             </CNavItem>
-            <CNavItem >
+            {/* <CNavItem >
               <CPopover
-                content={<CekForm handleSubmit={handleSubmit} />}
+                content={<CekForm handleSubmit={handleSubmit} disabled={""} hadleClosePopover={hadleClosePopover}/>}
                 placement="bottom"
-                visible={params.visible}
-                onClick={handleClick}
+                visible={params.showPopoper}
+                // trigger={['hover', 'focus']}
+                // trigger={}
+                onHide={hadleClosePopover}
+                // onShow={}
+                // onClick={handleClick}
+                // onShow={handleClick}
               >
-                <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none", marginRight :"10px" }} onClick={handleClick}>Popover on bottom</CButton>
+                <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none", marginRight :"10px" }} onClick={handleClick} >Top Up saldo <CIcon icon={cilMoney} style={{ marginLeft: "7px", color: "white" }} /></CButton>
               </CPopover>
-            </CNavItem>
+            </CNavItem> */}
+            {/* <CNavItem >
+              <CPopover
+                content={<CekForm handleSubmit={handleSubmit} disabled={params.disabled} handleClick={handleClick}/>}
+                placement="bottom"
+                visible={false}
+                onClick={handleClick}
+                // onShow={handleClick}
+              >
+                <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none", marginRight :"10px" }} onClick={handleClick} disabled={params.disabled}>Top Up saldo <CIcon icon={cilMoney} style={{ marginLeft: "7px", color: "white" }} /></CButton>
+              </CPopover>
+            </CNavItem> */}
             <CNavItem >
               <CButton size='sm' style={{ marginTop: "5px", background: "#379237", border: "none" }} onClick={handleClick}>Top Up saldo <CIcon icon={cilMoney} style={{ marginLeft: "7px", color: "white" }} /></CButton>
             </CNavItem>
@@ -206,7 +226,7 @@ const AppHeader = () => {
                 }
                 {modalScan.dataQrCode != "onLogin" &&
                   <CTooltip content="Scan qr" placement='right'>
-                    <CButton size='sm' style={{ marginLeft: "3px", color: "white", background: "#F6F54D", border: "none", marginTop: "-3px" }} onClick={handleScan}> scan qr</CButton>
+                    <CButton size='sm' style={{ marginLeft: "3px", background: "#F6F54D", border: "none", marginTop: "-3px" , color : "white"}} onClick={handleScan}> scan qr</CButton>
                   </CTooltip>
                 }
               </CNavLink>

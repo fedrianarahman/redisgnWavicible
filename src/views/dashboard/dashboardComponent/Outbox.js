@@ -1,17 +1,17 @@
-import React from 'react'
-import { CButton, CCard, CCardBody, CCardHeader, CForm, CFormInput, CFormLabel, CFormSelect, CRow, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell, CCol } from '@coreui/react'
+import React, { useEffect } from 'react'
+import { CButton, CCard, CCardBody, CCardHeader, CForm, CFormInput, CFormLabel, CFormSelect, CRow, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell, CCol, CPagination,CPaginationItem } from '@coreui/react'
 
 import { ApiService } from '../../../ApiService/ApiService';
 import ModalData from './Modal';
 import SpinnerLoading from '../../../components/SpinnerLoad/SpinnerLoading';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
+import ReactPaginate from 'react-paginate';
 const Outbox = () => {
 
 
     let defaultDate = new Date();
     defaultDate.getDate();
-    
     const [params, setParams] = React.useState({
         jenis: '1',
         tanggal1: defaultDate || '',
@@ -21,8 +21,20 @@ const Outbox = () => {
         show: false,
         modalTitle: '',
         modalButton: '',
+        rows : 0,
+        page : 0,
+        // limit : 10,
+        pages : 0,
+        minPage : 5,
+        pageCount : 0
     });
 
+    // page count
+    const [pageCount,setPageCount] = useState(0);
+
+    useEffect(()=>{
+        onLoadData()
+    }, [params.page])
     const [loading, setLoading] = useState(false)
 
     const handleChange = (event) => {
@@ -53,27 +65,29 @@ const Outbox = () => {
         event.preventDefault();
         setParams(state => ({ ...state, datas : []}))
         setLoading(state => true);
-        // setTimeout( async()=>{
-        //     await onLoadData()
-        // }, 2000)
         await onLoadData();
     }
     
+    const changePage = ({selected})=>{
+        setParams({...params, page : selected, minPage : params.minPage +1})
+    }
+
     const onLoadData = async () => {
         const { jenis, tanggal1, tanggal2 } = params;
 
         let localParams = {
 
-            limit: 25,
+            limit: 10,
+            skip : 10 * params.page,
             sort: 'id desc'
         }
 
         let res = await ApiService.post(`/wa/get-outbox`, { jenis, tanggal1, tanggal2 }, { params: localParams });
+        let pageCount = Math.ceil(res.data.data.total/10);
         setLoading(state => false);
-        setParams((params)=>({...params, datas : res.data.data.datas, show: false, satuData: res.data.data.datas[0]}))
+        setParams((params)=>({...params, datas : res.data.data.datas, rows : res.data.data.total, pages :res.data.data.total, show: false, satuData: res.data.data.datas[0], pageCount }))
 
     }
-
     const handleClose = () => setParams({ ...params, show: false });
 
     const handleAddData = () => {
@@ -93,7 +107,7 @@ const Outbox = () => {
                 <CCardHeader style={{ background: "#FD841F", color: "#fff", fontWeight: "bold" }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <h5>Outbox</h5>
-                        <CButton size='sm' type='submit' onClick={handleAddData}>Tambah Data</CButton>
+                        <CButton size='sm' type='submit' onClick={handleAddData} > Tambah Data</CButton>
                     </div>
                 </CCardHeader>
                 <CCardBody>
@@ -116,7 +130,8 @@ const Outbox = () => {
                      {loading ? (
                         <SpinnerLoading/>
                      ):(
-                        <CTable small className='mt-4 table-responsive table-bordered'>
+                        <>
+                        <CTable small className='mt-4 table-responsive table-bordered' responsive>
                         <CTableHead>
                             <CTableRow>
                                 <CTableHeaderCell scope="col">Nomor</CTableHeaderCell>
@@ -133,7 +148,7 @@ const Outbox = () => {
                                 let time = dataApi.createdAt.substr(11, 8);
                                 return (
                                     <CTableRow key={dataApi.id}>
-                                        <CTableDataCell>{index + 1}</CTableDataCell>
+                                        <CTableDataCell>{((params.page) * 10) + index + 1}</CTableDataCell>
                                         <CTableDataCell>{`${dateNew} ${time}`}</CTableDataCell>
                                         <CTableDataCell>{dataApi.nomorTujuan}</CTableDataCell>
                                         <CTableDataCell>{dataApi.message}</CTableDataCell>
@@ -146,9 +161,38 @@ const Outbox = () => {
                             })}
                         </CTableBody>
                     </CTable>
+                    <p>Total Data  : {params.rows} Page : {params.rows ? params.page +1 : 0} of {Math.ceil(params.rows/10)}</p>
+                    {/* <CPagination aria-label="Page navigation example" align='center'>
+                    <CPaginationItem aria-label="Previous" disabled>
+                        <span aria-hidden="true">&laquo;</span>
+                    </CPaginationItem>
+                    <CPaginationItem active>1</CPaginationItem>
+                    <CPaginationItem>2</CPaginationItem>
+                    <CPaginationItem>3</CPaginationItem>
+                    <CPaginationItem aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </CPaginationItem>
+                    </CPagination> */}
+                    <CPagination aria-label="Page navigation example" align='center'>
+                    <ReactPaginate
+                             previousLabel={"< Prev"}
+                             nextLabel={"> Next"}
+                             pageRangeDisplayed={5}
+                             pageCount={params.pageCount}
+                            onPageChange={changePage}
+                             containerClassName={"pagination"}
+                            pageLinkClassName={"page-link"}
+                            previousLinkClassName={"page-link "}
+                            nextLinkClassName={"page-link "}
+                            activeLinkClassName={"page-link active"}
+                            disabledLinkClassName={"page-link disabled"}
+                        />
+                    </CPagination>
+                    
+                    </>
                      )
-
                      }
+                    
                 </CCardBody>
             </CCard>
         </>

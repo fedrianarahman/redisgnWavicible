@@ -36,7 +36,8 @@ const CekForm = (props) => {
     const url = `https://siswa.smartsystem.co.id/#/paymentv2?` + param.join('&');
 
     console.log("line 96", url);
-    props.handleSubmit(url)
+    props.handleSubmit(url);
+    props.hadleClosePopover();
 }
 
 
@@ -53,9 +54,9 @@ const CekForm = (props) => {
             defaultValue={params.nominal}
             decimalsLimit={2}
             onValueChange={(value) => setParams({ ...params, nominal: value })}
-            autoComplete="off" />
+            autoComplete="off" disabled={props.disabled}/>
         </CInputGroup>
-        <CButton className='float-end text-right' type='submit' style={{background: "#379237", border: "none"}}>Top up</CButton>
+        <CButton className='float-end text-right' type='submit' style={{background: "#379237", border: "none"}} >Top up</CButton>
         <CInputGroup className=''>
         </CInputGroup>
       </CForm>
